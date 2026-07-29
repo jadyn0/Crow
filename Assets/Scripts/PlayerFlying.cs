@@ -14,7 +14,6 @@ public class PlayerFlying : MonoBehaviour
 
     
     [SerializeField] private float rotationDamp = 8f;
-    [SerializeField] private float jumpPower = 16f;
 
     private Vector2 moveValue;
     private float jumpValue;
@@ -22,7 +21,6 @@ public class PlayerFlying : MonoBehaviour
     private bool isFacingRight = true;
 
     [SerializeField] private Rigidbody2D rb;
-    private Vector3 currentAngle;
 
     [SerializeField] private float glideSpeed = 8f;
     [SerializeField] private float minGlideSpeed, MaxGlideSpeed;
@@ -30,29 +28,61 @@ public class PlayerFlying : MonoBehaviour
     [SerializeField] private float thrustSpeed;
 
     private bool isThrust;
-
-
-
     private float dx;
 
+
+    [SerializeField] private float rayCastLength;
+    [SerializeField] private LayerMask groundMask;
+
+    [SerializeField] private float speed;
+
+    private Animator animator;
 
     void Start()
     {
         moveAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
-        currentAngle = transform.eulerAngles;
+
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
         moveValue = moveAction.ReadValue<Vector2>();
-
         jumpValue = jumpAction.ReadValue<float>();
 
         Flip();
 
     }
     void FixedUpdate()
+    {
+        if (!IsGrounded())
+        {
+            Fly();
+        }
+        else
+        {
+            Walk();
+        }
+
+
+    }
+
+    private void Walk()
+    {
+        rb.linearVelocityX = moveValue.x * speed;
+
+        if (moveValue.x != 0)
+        {
+            animator.SetBool("isWalking", true);
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+        }
+    }
+
+    private void Fly()
     {
         Thrust();
 
@@ -75,14 +105,15 @@ public class PlayerFlying : MonoBehaviour
 
     private void Thrust()
     {
-        rb.AddRelativeForceX(thrustSpeed * jumpValue);
+        //rb.AddRelativeForceX(thrustSpeed * jumpValue);
+        if (jumpValue != 0)
+        {
+            dx = MaxGlideSpeed;
+        }
     }
 
     private void Turn()
     {
-        /*Vector3 dir = new Vector3(moveValue.x, moveValue.y, transform.position.z);
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), 0.25f);*/
 
         if (moveValue != new Vector2(0f, 0f))
         {
@@ -98,8 +129,34 @@ public class PlayerFlying : MonoBehaviour
         {
             isFacingRight = !isFacingRight;
             Vector3 localScale = transform.localScale;
-            localScale.y *= -1f;
+
+            if (animator.GetBool("isOnGround"))
+            {
+                localScale.x *= -1f;
+            }
+            else
+            {
+                localScale.y *= -1f;
+            }
             transform.localScale = localScale;
+        }
+    }
+
+    private bool IsGrounded()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, rayCastLength, groundMask);
+
+        // If it hits something...
+        if (hit)
+        {
+            animator.SetBool("isOnGround", true);
+            return true;
+        }
+
+        else
+        {
+            animator.SetBool("isOnGround", false);
+            return false;
         }
     }
 }
