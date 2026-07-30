@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine.UIElements;
 using UnityEditor.ShaderGraph.Internal;
 
-public class PlayerFlying : MonoBehaviour
+public class CrowController : MonoBehaviour
 {
     InputAction moveAction;
     InputAction jumpAction;
@@ -24,10 +24,6 @@ public class PlayerFlying : MonoBehaviour
 
     [SerializeField] private float glideSpeed = 8f;
     [SerializeField] private float minGlideSpeed, MaxGlideSpeed;
-
-    [SerializeField] private float thrustSpeed;
-
-    private bool isThrust;
     private float dx;
 
 
@@ -44,6 +40,7 @@ public class PlayerFlying : MonoBehaviour
         jumpAction = InputSystem.actions.FindAction("Jump");
 
         animator = GetComponent<Animator>();
+        animator.updateMode = AnimatorUpdateMode.Fixed;
     }
 
     void Update()
@@ -58,7 +55,7 @@ public class PlayerFlying : MonoBehaviour
     {
         if (!IsGrounded())
         {
-            Fly();
+            //Fly();
         }
         else
         {
