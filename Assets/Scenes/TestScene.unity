@@ -253,12 +253,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28e8db575e081b848a7c75a3fbe04ff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFlying
-  rotationDamp: 0.15
+  moveValue: {x: 0, y: 0}
+  jumpValue: 0
   rb: {fileID: 147395676}
-  glideSpeed: 2
+  glideSpeed: 1
   minGlideSpeed: 0
-  MaxGlideSpeed: 100
-  thrustSpeed: 50
+  maxGlideSpeed: 70
+  rotationDamp: 0.15
   rayCastLength: 0.6
   groundMask:
     serializedVersion: 2

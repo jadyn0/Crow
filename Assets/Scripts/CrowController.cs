@@ -12,18 +12,18 @@ public class CrowController : MonoBehaviour
     InputAction moveAction;
     InputAction jumpAction;
 
-    
-    [SerializeField] private float rotationDamp = 8f;
-
-    private Vector2 moveValue;
-    private float jumpValue;
+    public Vector2 moveValue;
+    public float jumpValue;
 
     private bool isFacingRight = true;
 
     [SerializeField] private Rigidbody2D rb;
 
-    [SerializeField] private float glideSpeed = 8f;
-    [SerializeField] private float minGlideSpeed, MaxGlideSpeed;
+    public float glideSpeed = 8f;
+    public float minGlideSpeed, maxGlideSpeed;
+
+    public float rotationDamp = 8f;
+
     private float dx;
 
 
@@ -94,7 +94,7 @@ public class CrowController : MonoBehaviour
         angle = Mathf.Sin(transform.eulerAngles.z * Mathf.Deg2Rad);
         dx = dx + glideSpeed * -angle;
 
-        dx = Mathf.Clamp(dx, minGlideSpeed, MaxGlideSpeed);
+        dx = Mathf.Clamp(dx, minGlideSpeed,maxGlideSpeed);
 
         rb.AddRelativeForceX(dx);
     }
@@ -105,7 +105,7 @@ public class CrowController : MonoBehaviour
         //rb.AddRelativeForceX(thrustSpeed * jumpValue);
         if (jumpValue != 0)
         {
-            dx = MaxGlideSpeed;
+            dx = maxGlideSpeed;
         }
     }
 

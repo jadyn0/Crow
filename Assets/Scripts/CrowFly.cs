@@ -3,26 +3,36 @@ using UnityEngine;
 public class CrowFly : StateMachineBehaviour
 {
     private CrowController crowController;
+    private Rigidbody2D rb;
+    private Transform transform;
+
     private float rotationDamp;
-    private float minGlideSpeed, MaxGlideSpeed;
+    private float glideSpeed;
+    private float minGlideSpeed, maxGlideSpeed;
+
     private float dx;
 
     private Vector2 moveValue;
     private float jumpValue;
-    private float glideSpeed;
-    private Rigidbody2D rb;
-    private Transform transform;
-
-
+    
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         crowController = animator.GetComponent<CrowController>();
         transform = animator.GetComponent<Transform>();
+        rb = animator.GetComponent<Rigidbody2D>();
+
+        rotationDamp = crowController.rotationDamp;
+        glideSpeed = crowController.glideSpeed;
+        minGlideSpeed = crowController.minGlideSpeed;
+        maxGlideSpeed = crowController.maxGlideSpeed;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        moveValue = crowController.moveValue;
+        jumpValue = crowController.jumpValue;
+
         Turn();
         Thrust();
         GlidingMovement();
@@ -34,7 +44,7 @@ public class CrowFly : StateMachineBehaviour
         angle = Mathf.Sin(transform.eulerAngles.z * Mathf.Deg2Rad);
         dx = dx + glideSpeed * -angle;
 
-        dx = Mathf.Clamp(dx, minGlideSpeed, MaxGlideSpeed);
+        dx = Mathf.Clamp(dx, minGlideSpeed, maxGlideSpeed);
 
         rb.AddRelativeForceX(dx);
     }
@@ -43,7 +53,7 @@ public class CrowFly : StateMachineBehaviour
     {
         if (jumpValue != 0)
         {
-            dx = MaxGlideSpeed;
+            dx = maxGlideSpeed;
         }
     }
 
