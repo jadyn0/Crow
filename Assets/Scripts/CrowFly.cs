@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class CrowFly : StateMachineBehaviour
+public class CrowFly2 : StateMachineBehaviour
 {
-    private CrowController crowController;
+    private CrowController2 crowController;
     private Rigidbody2D rb;
     private Transform transform;
 
@@ -18,7 +18,7 @@ public class CrowFly : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        crowController = animator.GetComponent<CrowController>();
+        crowController = animator.GetComponent<CrowController2>();
         transform = animator.GetComponent<Transform>();
         rb = animator.GetComponent<Rigidbody2D>();
 

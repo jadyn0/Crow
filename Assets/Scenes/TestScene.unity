@@ -128,9 +128,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 147395678}
+  - component: {fileID: 147395685}
   - component: {fileID: 147395677}
   - component: {fileID: 147395676}
-  - component: {fileID: 147395680}
   - component: {fileID: 147395683}
   - component: {fileID: 147395684}
   m_Layer: 0
@@ -241,30 +241,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &147395680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 147395674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28e8db575e081b848a7c75a3fbe04ff4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerFlying
-  moveValue: {x: 0, y: 0}
-  jumpValue: 0
-  rb: {fileID: 147395676}
-  glideSpeed: 1
-  minGlideSpeed: 0
-  maxGlideSpeed: 70
-  rotationDamp: 0.15
-  rayCastLength: 0.6
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 64
-  speed: 10
 --- !u!95 &147395683
 Animator:
   serializedVersion: 7
@@ -323,6 +299,64 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.563
+--- !u!114 &147395685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147395674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f4501706ffd11840988a7c5d26986c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatePattern.CrowStateController
+  animator: {fileID: 0}
+  rb: {fileID: 0}
+  moveAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: d8419ff3-7027-415f-94d9-055091831713
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  jumpAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: ed0c79ec-0822-4b9d-8c00-0c702ea9527b
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  sprintAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: d8f80f13-4022-412d-8931-5b33ce7e8943
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  moveValue: {x: 0, y: 0}
+  jumpValue: 0
+  sprintValue: 0
+  glideSpeed: 1
+  crawlFlySpeed: 20
+  minGlideSpeed: 3
+  maxGlideSpeed: 100
+  glideDamp: 0.05
+  rotationDamp: 0.15
+  walkSpeed: 10
+  jumpForce: 25
+  flyingGravityScale: 1
+  walkingGravityScale: 7.5
+  rayCastLength: 0.6
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &179916228
 GameObject:
   m_ObjectHideFlags: 0

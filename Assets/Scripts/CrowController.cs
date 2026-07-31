@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine.UIElements;
 using UnityEditor.ShaderGraph.Internal;
 
-public class CrowController : MonoBehaviour
+public class CrowController2 : MonoBehaviour
 {
     InputAction moveAction;
     InputAction jumpAction;
