@@ -103,5 +103,10 @@ namespace StatePattern
             }
             transform.localScale = localScale;
         }
+
+
+        public void Collision(Collision2D collision)
+        {
+        }
     }
 }

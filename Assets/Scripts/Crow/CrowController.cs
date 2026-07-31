@@ -26,6 +26,7 @@ namespace StatePattern
 
         [SerializeField] private float glideDamp = 0.15f;
         [SerializeField] private float rotationDamp = 0.15f;
+        [SerializeField] private float collisionMultiplier = 0.4f;
 
 
         [SerializeField] private float walkSpeed = 10f;
@@ -40,7 +41,7 @@ namespace StatePattern
 
         private void InitializeStates()
         {
-            crowFly = new CrowFly(transform, rb, animator, glideSpeed, crawlFlySpeed, maxGlideSpeed, minGlideSpeed, glideDamp, rotationDamp, flyingGravityScale);
+            crowFly = new CrowFly(transform, rb, animator, glideSpeed, crawlFlySpeed, maxGlideSpeed, minGlideSpeed, glideDamp, rotationDamp, collisionMultiplier, flyingGravityScale);
             crowWalk = new CrowWalk(transform, rb, animator, walkSpeed, jumpForce, walkingGravityScale);
 
             SetState(crowFly);
@@ -105,6 +106,11 @@ namespace StatePattern
                 animator.SetBool("isGrounded", false);
                 return false;
             }
+        }
+
+        public void OnCollisionEnter2D(Collision2D collision)
+        {
+            currentState.Collision(collision);
         }
     }
 }

@@ -20,9 +20,11 @@ namespace StatePattern
         private float glideDamp;
         private float rotationDamp;
 
+        private float collisionMultiplier;
+
         private float gravityScale;
 
-        public CrowFly(Transform _transform, Rigidbody2D _rb, Animator _animator, float _glideSpeed,float _crawlFlySpeed, float _maxGlideSpeed, float _minGlideSpeed, float _glideDamp, float _rotationDamp, float _gravityScale)
+        public CrowFly(Transform _transform, Rigidbody2D _rb, Animator _animator, float _glideSpeed, float _crawlFlySpeed, float _maxGlideSpeed, float _minGlideSpeed, float _glideDamp, float _rotationDamp, float _collisionMultiplier, float _gravityScale)
         {
             transform = _transform;
             rb = _rb;
@@ -35,6 +37,8 @@ namespace StatePattern
 
             glideDamp = _glideDamp;
             rotationDamp = _rotationDamp;
+            collisionMultiplier = _collisionMultiplier;
+
             gravityScale = _gravityScale;
         }
 
@@ -60,12 +64,12 @@ namespace StatePattern
             //resets dx
             dx = maxGlideSpeed;
 
-            
+
         }
 
         public void UpdateState()
         {
-            if (crowController.IsGrounded())
+            if ((crowController.IsGrounded() && crowController.jumpValue != 0) || (crowController.IsGrounded() && rb.linearVelocity.magnitude <= 0.5f * 40f))
             {
                 crowController.WalkStateEnter();
             }
@@ -109,7 +113,7 @@ namespace StatePattern
 
             else
             {
-                
+
             }
         }
 
@@ -136,6 +140,13 @@ namespace StatePattern
                 localScale.y = 1f;
             }
             transform.localScale = localScale;
+        }
+
+
+        public void Collision(Collision2D collision)
+        {
+            Debug.Log("collide");
+            dx *= collisionMultiplier;
         }
     }
 }
