@@ -16,6 +16,8 @@ namespace StatePattern
 
         private float gravityScale;
 
+        private Vector2 posLastFrame;
+
         public CrowWalk(Transform _transform, Rigidbody2D _rb, Animator _animator, float _walkSpeed, float _jumpForce, float _gravityScale)
         {
             transform = _transform;
@@ -32,9 +34,12 @@ namespace StatePattern
         {
             crowController = _crowController;
 
+            animator.SetTrigger("hasLanded");
+
             //return scale to normal
             Vector3 localScale = transform.localScale;
-            localScale = new Vector3(1f, 1f, 1f);
+            localScale.x = localScale.y;
+            localScale.y = 1f;
             transform.localScale = localScale;
 
             //return rotation to normal
@@ -51,24 +56,38 @@ namespace StatePattern
             {
                 Jump();
             }
-
+            
+            Flip();
+            
             //fly when space is pressed in the air
             if (crowController.jumpAction.triggered && crowController.jumpAction.ReadValue<float>() > 0f && !crowController.IsGrounded())
             {
                 crowController.FlyStateEnter();
             }
 
-            Flip();
+            
         }
 
         public void FixedUpdateState()
         {
             rb.linearVelocityX = crowController.moveValue.x * walkSpeed;
+            if (Mathf.Round(transform.position.x * 100) != Mathf.Round(posLastFrame.x * 100))
+            {
+                animator.SetBool("isWalking", true);
+                
+            }
+            else
+            {
+                animator.SetBool("isWalking", false);
+            }
+            posLastFrame = transform.position;
         }
 
         public void Jump()
         {
             rb.AddForceY(jumpForce, ForceMode2D.Impulse);
+
+            animator.SetTrigger("jump");
         }
 
         public void Flip()

@@ -344,7 +344,7 @@ MonoBehaviour:
   jumpValue: 0
   sprintValue: 0
   glideSpeed: 1
-  crawlFlySpeed: 20
+  crawlFlySpeed: 25.8
   minGlideSpeed: 3
   maxGlideSpeed: 100
   glideDamp: 0.05

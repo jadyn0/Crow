@@ -42,16 +42,25 @@ namespace StatePattern
         {
             crowController = _crowController;
 
+            animator.SetTrigger("takeOff");
+
             //return scale to normal
             Vector3 localScale = transform.localScale;
-            localScale = new Vector3(1f, 1f, 1f);
+            if (localScale.x == -1)
+            {
+                transform.eulerAngles = new Vector3(0, 0, 180f);
+            }
+            localScale.y = localScale.x;
+            localScale.x = 1f;
             transform.localScale = localScale;
 
             //wings gravity
             rb.gravityScale = gravityScale;
 
             //resets dx
-            dx = 0f;
+            dx = maxGlideSpeed;
+
+            
         }
 
         public void UpdateState()
@@ -86,12 +95,21 @@ namespace StatePattern
         {
             if (crowController.jumpValue != 0)
             {
+                animator.SetBool("isHovering", false);
+                animator.SetBool("isAccelerating", true);
                 dx = Mathf.Lerp(dx, crawlFlySpeed, glideDamp);
             }
 
             else if (crowController.sprintValue != 0)
             {
+                animator.SetBool("isHovering", true);
+                animator.SetBool("isAccelerating", false);
                 dx = Mathf.Lerp(dx, maxGlideSpeed, glideDamp);
+            }
+
+            else
+            {
+                
             }
         }
 

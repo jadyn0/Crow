@@ -43,7 +43,7 @@ namespace StatePattern
             crowFly = new CrowFly(transform, rb, animator, glideSpeed, crawlFlySpeed, maxGlideSpeed, minGlideSpeed, glideDamp, rotationDamp, flyingGravityScale);
             crowWalk = new CrowWalk(transform, rb, animator, walkSpeed, jumpForce, walkingGravityScale);
 
-            SetState(crowWalk);
+            SetState(crowFly);
         }
 
         public void Start()
@@ -79,11 +79,13 @@ namespace StatePattern
 
         public void FlyStateEnter()
         {
+            animator.ResetTrigger("hasLanded");
             SetState(crowFly);
         }
 
         public void WalkStateEnter()
         {
+            animator.ResetTrigger("takeOff");
             SetState(crowWalk);
         }
 
@@ -94,11 +96,13 @@ namespace StatePattern
             // If it hits something...
             if (hit)
             {
+                animator.SetBool("isGrounded", true);
                 return true;
             }
 
             else
             {
+                animator.SetBool("isGrounded", false);
                 return false;
             }
         }
