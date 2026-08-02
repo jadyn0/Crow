@@ -24,6 +24,8 @@ namespace StatePattern
 
         private float gravityScale;
 
+        private bool isFacingRight;
+
         public CrowFly(Transform _transform, Rigidbody2D _rb, Animator _animator, float _glideSpeed, float _crawlFlySpeed, float _maxGlideSpeed, float _minGlideSpeed, float _glideDamp, float _rotationDamp, float _collisionMultiplier, float _gravityScale)
         {
             transform = _transform;
@@ -62,7 +64,7 @@ namespace StatePattern
             rb.gravityScale = gravityScale;
 
             //resets dx
-            dx = maxGlideSpeed;
+            dx = 0.75f * maxGlideSpeed;
 
 
         }
@@ -71,6 +73,7 @@ namespace StatePattern
         {
             if ((crowController.IsGrounded() && crowController.jumpValue != 0) || (crowController.IsGrounded() && rb.linearVelocity.magnitude <= 0.5f * 40f))
             {
+                crowController.SetTrail(false);
                 crowController.WalkStateEnter();
             }
             Flip();
@@ -92,28 +95,38 @@ namespace StatePattern
 
             dx = Mathf.Clamp(dx, minGlideSpeed, maxGlideSpeed);
 
-            rb.AddRelativeForceX(dx);
+            if(dx >= 0.95f * maxGlideSpeed && !animator.GetBool("isAccelerating"))
+            {
+                crowController.SetTrail(true);
+            }
+            else
+            {
+                crowController.SetTrail(false);
+            }
+
+                rb.AddRelativeForceX(dx);
         }
 
         private void Thrust()
         {
             if (crowController.jumpValue != 0)
             {
-                animator.SetBool("isHovering", false);
-                animator.SetBool("isAccelerating", true);
+                animator.SetBool("isHovering", true);
+                animator.SetBool("isAccelerating", false);
                 dx = Mathf.Lerp(dx, crawlFlySpeed, glideDamp);
             }
 
             else if (crowController.sprintValue != 0)
             {
-                animator.SetBool("isHovering", true);
-                animator.SetBool("isAccelerating", false);
+                animator.SetBool("isHovering", false);
+                animator.SetBool("isAccelerating", true);
                 dx = Mathf.Lerp(dx, maxGlideSpeed, glideDamp);
             }
 
             else
             {
-
+                animator.SetBool("isHovering", false);
+                animator.SetBool("isAccelerating", false);
             }
         }
 
@@ -131,13 +144,31 @@ namespace StatePattern
         private void Flip()
         {
             Vector3 localScale = transform.localScale;
-            if (transform.eulerAngles.z % 360 > 90 && transform.eulerAngles.z % 360 < 270)
+            if (transform.eulerAngles.z % 360 > 90 && transform.eulerAngles.z % 360 < 270 && !animator.GetBool("isHovering"))
             {
                 localScale.y = -1f;
+                isFacingRight = false;
             }
-            else
+            else if(transform.eulerAngles.z % 360 < 90 && transform.eulerAngles.z % 360 > 0 && !animator.GetBool("isHovering") || transform.eulerAngles.z % 360 > 270 && transform.eulerAngles.z % 360 < 360 && !animator.GetBool("isHovering"))
             {
                 localScale.y = 1f;
+                isFacingRight = true;
+            }
+            transform.localScale = localScale;
+        }
+
+        private void Flip2()
+        {
+            Vector3 localScale = transform.localScale;
+            if (!isFacingRight && transform.eulerAngles.z % 360 > 270 && transform.eulerAngles.z % 360 < 285)
+            {
+                localScale.y = 1f;
+                isFacingRight = true;
+            }
+            else if (isFacingRight && transform.eulerAngles.z % 360 < 270 && transform.eulerAngles.z % 360 > 255)
+            {
+                localScale.y = -1f;
+                isFacingRight = false;
             }
             transform.localScale = localScale;
         }

@@ -344,11 +344,11 @@ MonoBehaviour:
   moveValue: {x: 0, y: 0}
   jumpValue: 0
   sprintValue: 0
-  glideSpeed: 0.5
-  crawlFlySpeed: 15
+  glideSpeed: 1
+  crawlFlySpeed: 25.8
   minGlideSpeed: 3
   maxGlideSpeed: 80
-  glideDamp: 0.025
+  glideDamp: 0.05
   rotationDamp: 0.1
   collisionMultiplier: 0.4
   walkSpeed: 10
@@ -359,7 +359,6 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
-  wingTrail: {fileID: 434544502}
 --- !u!1 &179916228
 GameObject:
   m_ObjectHideFlags: 0

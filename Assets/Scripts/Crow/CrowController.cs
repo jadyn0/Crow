@@ -39,6 +39,9 @@ namespace StatePattern
         [SerializeField] private float rayCastLength;
         [SerializeField] private LayerMask groundMask;
 
+
+        [SerializeField] private TrailRenderer wingTrail;
+
         private void InitializeStates()
         {
             crowFly = new CrowFly(transform, rb, animator, glideSpeed, crawlFlySpeed, maxGlideSpeed, minGlideSpeed, glideDamp, rotationDamp, collisionMultiplier, flyingGravityScale);
@@ -105,6 +108,18 @@ namespace StatePattern
             {
                 animator.SetBool("isGrounded", false);
                 return false;
+            }
+        }
+
+        public void SetTrail(bool _state)
+        {
+            if (_state)
+            {
+                wingTrail.emitting = true;
+            }
+            else
+            {
+                wingTrail.emitting = false;
             }
         }
 
