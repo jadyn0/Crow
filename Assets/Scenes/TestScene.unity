@@ -430,9 +430,10 @@ MonoBehaviour:
   glideDamp: 0.025
   rotationDamp: 0.1
   collisionMultiplier: 0.4
-  maxStamina: 0
-  staminaDrain: 0
-  staminaBar: {fileID: 0}
+  maxStamina: 100
+  staminaDrain: 1
+  stamina: 100
+  staminaBar: {fileID: 1084774167}
   walkSpeed: 10
   jumpForce: 25
   flyingGravityScale: 1

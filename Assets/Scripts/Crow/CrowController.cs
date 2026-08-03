@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace StatePattern
 {
@@ -27,7 +28,7 @@ namespace StatePattern
         [SerializeField] private float glideDamp = 0.15f;
         [SerializeField] private float rotationDamp = 0.15f;
         [SerializeField] private float collisionMultiplier = 0.4f;
-        [SerializeField] private float maxStamina, staminaDrain;
+        public float maxStamina, staminaDrain;
         public float stamina;
         [SerializeField] private Slider staminaBar;
 
