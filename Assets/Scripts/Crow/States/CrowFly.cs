@@ -22,11 +22,13 @@ namespace StatePattern
 
         private float collisionMultiplier;
 
+        private float maxStamina, stamina, staminaDrain;
+
         private float gravityScale;
 
         private bool isFacingRight;
 
-        public CrowFly(Transform _transform, Rigidbody2D _rb, Animator _animator, float _glideSpeed, float _crawlFlySpeed, float _maxGlideSpeed, float _minGlideSpeed, float _glideDamp, float _rotationDamp, float _collisionMultiplier, float _gravityScale)
+        public CrowFly(Transform _transform, Rigidbody2D _rb, Animator _animator, float _glideSpeed, float _crawlFlySpeed, float _maxGlideSpeed, float _minGlideSpeed, float _glideDamp, float _rotationDamp, float _collisionMultiplier, float _maxStamina, float _staminaDrain, float _gravityScale)
         {
             transform = _transform;
             rb = _rb;
@@ -40,6 +42,9 @@ namespace StatePattern
             glideDamp = _glideDamp;
             rotationDamp = _rotationDamp;
             collisionMultiplier = _collisionMultiplier;
+
+            maxStamina = _maxStamina;
+            staminaDrain = _staminaDrain;
 
             gravityScale = _gravityScale;
         }
