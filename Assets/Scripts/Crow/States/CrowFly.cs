@@ -22,13 +22,13 @@ namespace StatePattern
 
         private float collisionMultiplier;
 
-        private float maxStamina, stamina, staminaDrain;
+        private float staminaDrain;
 
         private float gravityScale;
 
         private bool isFacingRight;
 
-        public CrowFly(Transform _transform, Rigidbody2D _rb, Animator _animator, float _glideSpeed, float _crawlFlySpeed, float _maxGlideSpeed, float _minGlideSpeed, float _glideDamp, float _rotationDamp, float _collisionMultiplier, float _maxStamina, float _staminaDrain, float _gravityScale)
+        public CrowFly(Transform _transform, Rigidbody2D _rb, Animator _animator, float _glideSpeed, float _crawlFlySpeed, float _maxGlideSpeed, float _minGlideSpeed, float _glideDamp, float _rotationDamp, float _collisionMultiplier, float _staminaDrain, float _gravityScale)
         {
             transform = _transform;
             rb = _rb;
@@ -42,8 +42,7 @@ namespace StatePattern
             glideDamp = _glideDamp;
             rotationDamp = _rotationDamp;
             collisionMultiplier = _collisionMultiplier;
-
-            maxStamina = _maxStamina;
+ 
             staminaDrain = _staminaDrain;
 
             gravityScale = _gravityScale;
@@ -126,6 +125,9 @@ namespace StatePattern
                 animator.SetBool("isHovering", false);
                 animator.SetBool("isAccelerating", true);
                 dx = Mathf.Lerp(dx, maxGlideSpeed, glideDamp);
+
+                crowController.stamina -= staminaDrain;
+                crowController.updateStaminaBar(crowController.maxStamina, crowController.stamina);
             }
 
             else
@@ -158,22 +160,6 @@ namespace StatePattern
             {
                 localScale.y = 1f;
                 isFacingRight = true;
-            }
-            transform.localScale = localScale;
-        }
-
-        private void Flip2()
-        {
-            Vector3 localScale = transform.localScale;
-            if (!isFacingRight && transform.eulerAngles.z % 360 > 270 && transform.eulerAngles.z % 360 < 285)
-            {
-                localScale.y = 1f;
-                isFacingRight = true;
-            }
-            else if (isFacingRight && transform.eulerAngles.z % 360 < 270 && transform.eulerAngles.z % 360 > 255)
-            {
-                localScale.y = -1f;
-                isFacingRight = false;
             }
             transform.localScale = localScale;
         }

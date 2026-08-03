@@ -28,7 +28,8 @@ namespace StatePattern
         [SerializeField] private float rotationDamp = 0.15f;
         [SerializeField] private float collisionMultiplier = 0.4f;
         [SerializeField] private float maxStamina, staminaDrain;
-        [SerializeField] private GameObject staminaBar;
+        public float stamina;
+        [SerializeField] private Slider staminaBar;
 
 
         [SerializeField] private float walkSpeed = 10f;
@@ -46,7 +47,7 @@ namespace StatePattern
 
         private void InitializeStates()
         {
-            crowFly = new CrowFly(transform, rb, animator, glideSpeed, crawlFlySpeed, maxGlideSpeed, minGlideSpeed, glideDamp, rotationDamp, collisionMultiplier, maxStamina, staminaDrain, flyingGravityScale);
+            crowFly = new CrowFly(transform, rb, animator, glideSpeed, crawlFlySpeed, maxGlideSpeed, minGlideSpeed, glideDamp, rotationDamp, collisionMultiplier, staminaDrain, flyingGravityScale);
             crowWalk = new CrowWalk(transform, rb, animator, walkSpeed, jumpForce, walkingGravityScale);
 
             SetState(crowFly);
@@ -127,7 +128,7 @@ namespace StatePattern
 
         public void updateStaminaBar(float _maxStamina, float _stamina)
         {
-            
+            staminaBar.value = _stamina / _maxStamina;
         }
 
         public void OnCollisionEnter2D(Collision2D collision)
