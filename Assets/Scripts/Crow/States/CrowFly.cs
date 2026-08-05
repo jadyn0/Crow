@@ -22,13 +22,11 @@ namespace StatePattern
 
         private float collisionMultiplier;
 
-        private float staminaDrain;
-
         private float gravityScale;
 
         private bool isFacingRight;
 
-        public CrowFly(Transform _transform, Rigidbody2D _rb, Animator _animator, float _glideSpeed, float _crawlFlySpeed, float _maxGlideSpeed, float _minGlideSpeed, float _glideDamp, float _rotationDamp, float _collisionMultiplier, float _staminaDrain, float _gravityScale)
+        public CrowFly(Transform _transform, Rigidbody2D _rb, Animator _animator, float _glideSpeed, float _crawlFlySpeed, float _maxGlideSpeed, float _minGlideSpeed, float _glideDamp, float _rotationDamp, float _collisionMultiplier, float _gravityScale)
         {
             transform = _transform;
             rb = _rb;
@@ -42,8 +40,6 @@ namespace StatePattern
             glideDamp = _glideDamp;
             rotationDamp = _rotationDamp;
             collisionMultiplier = _collisionMultiplier;
- 
-            staminaDrain = _staminaDrain;
 
             gravityScale = _gravityScale;
         }
@@ -75,11 +71,21 @@ namespace StatePattern
 
         public void UpdateState()
         {
-            if ((crowController.IsGrounded() && crowController.jumpValue != 0) || (crowController.IsGrounded() && rb.linearVelocity.magnitude <= 0.5f * 40f))
+            if ((crowController.IsGrounded(crowController.groundedRayCastLength) && crowController.jumpValue != 0) || (crowController.IsGrounded(crowController.groundedRayCastLength) && rb.linearVelocity.magnitude <= 0.5f * 40f))
             {
                 crowController.SetTrail(false);
                 crowController.WalkStateEnter();
             }
+
+            if (crowController.IsGrounded(crowController.hoverRayCastLength))
+            {
+                animator.SetBool("isHovering", true);
+            }
+            else
+            {
+                animator.SetBool("isHovering", false);
+            }
+
             Flip();
         }
 
@@ -115,24 +121,24 @@ namespace StatePattern
         {
             if (crowController.jumpValue != 0)
             {
-                animator.SetBool("isHovering", true);
+                animator.SetBool("isBraking", true);
                 animator.SetBool("isAccelerating", false);
                 dx = Mathf.Lerp(dx, crawlFlySpeed, glideDamp);
             }
 
-            else if (crowController.sprintValue != 0)
+        else if (crowController.sprintValue != 0 && crowController.stamina > 0)
             {
-                animator.SetBool("isHovering", false);
+                animator.SetBool("isBraking", false);
                 animator.SetBool("isAccelerating", true);
                 dx = Mathf.Lerp(dx, maxGlideSpeed, glideDamp);
 
-                crowController.stamina -= staminaDrain;
-                crowController.updateStaminaBar(crowController.maxStamina, crowController.stamina);
+                crowController.stamina -= crowController.staminaDrain;
+                crowController.updateStaminaBar();
             }
 
             else
             {
-                animator.SetBool("isHovering", false);
+                animator.SetBool("isBraking", false);
                 animator.SetBool("isAccelerating", false);
             }
         }

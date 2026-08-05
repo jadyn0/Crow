@@ -430,15 +430,16 @@ MonoBehaviour:
   glideDamp: 0.025
   rotationDamp: 0.1
   collisionMultiplier: 0.4
-  maxStamina: 100
+  maxStamina: 150
   staminaDrain: 1
-  stamina: 100
+  stamina: 150
   staminaBar: {fileID: 1084774167}
   walkSpeed: 10
   jumpForce: 25
   flyingGravityScale: 1
   walkingGravityScale: 7.5
-  rayCastLength: 0.6
+  groundedRayCastLength: 0.6
+  hoverRayCastLength: 3
   groundMask:
     serializedVersion: 2
     m_Bits: 64
@@ -1408,7 +1409,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

@@ -14,9 +14,7 @@ namespace StatePattern
         [HideInInspector] public Animator animator;
         [HideInInspector] public Rigidbody2D rb;
 
-        [HideInInspector] public InputAction moveAction;
-        [HideInInspector] public InputAction jumpAction;
-        [HideInInspector] public InputAction sprintAction;
+        [HideInInspector] public InputAction moveAction, jumpAction, sprintAction;
         [HideInInspector] public Vector2 moveValue;
         [HideInInspector] public float jumpValue;
         [HideInInspector] public float sprintValue;
@@ -28,8 +26,7 @@ namespace StatePattern
         [SerializeField] private float glideDamp = 0.15f;
         [SerializeField] private float rotationDamp = 0.15f;
         [SerializeField] private float collisionMultiplier = 0.4f;
-        public float maxStamina, staminaDrain;
-        public float stamina;
+        public float maxStamina, staminaDrain, stamina;
         [SerializeField] private Slider staminaBar;
 
 
@@ -40,7 +37,7 @@ namespace StatePattern
         [SerializeField] private float walkingGravityScale = 5f;
 
 
-        [SerializeField] private float rayCastLength;
+        public float groundedRayCastLength, hoverRayCastLength;
         [SerializeField] private LayerMask groundMask;
 
 
@@ -48,7 +45,7 @@ namespace StatePattern
 
         private void InitializeStates()
         {
-            crowFly = new CrowFly(transform, rb, animator, glideSpeed, crawlFlySpeed, maxGlideSpeed, minGlideSpeed, glideDamp, rotationDamp, collisionMultiplier, staminaDrain, flyingGravityScale);
+            crowFly = new CrowFly(transform, rb, animator, glideSpeed, crawlFlySpeed, maxGlideSpeed, minGlideSpeed, glideDamp, rotationDamp, collisionMultiplier, flyingGravityScale);
             crowWalk = new CrowWalk(transform, rb, animator, walkSpeed, jumpForce, walkingGravityScale);
 
             SetState(crowFly);
@@ -97,9 +94,9 @@ namespace StatePattern
             SetState(crowWalk);
         }
 
-        public bool IsGrounded()
+        public bool IsGrounded(float _rayCastLength)
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, rayCastLength, groundMask);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, _rayCastLength, groundMask);
 
             // If it hits something...
             if (hit)
@@ -127,9 +124,19 @@ namespace StatePattern
             }
         }
 
-        public void updateStaminaBar(float _maxStamina, float _stamina)
+        public void updateStaminaBar()
         {
-            staminaBar.value = _stamina / _maxStamina;
+            if (stamina < 0)
+            {
+                stamina = 0;
+            }
+
+            else if (stamina > maxStamina)
+            {
+                stamina = maxStamina;
+            }
+
+            staminaBar.value = stamina / maxStamina;
         }
 
         public void OnCollisionEnter2D(Collision2D collision)

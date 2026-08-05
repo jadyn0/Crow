@@ -52,7 +52,7 @@ namespace StatePattern
         public void UpdateState()
         {
             //jump when space is pressed
-            if (crowController.jumpAction.triggered && crowController.jumpAction.ReadValue<float>() > 0f && crowController.IsGrounded())
+            if (crowController.jumpAction.triggered && crowController.jumpAction.ReadValue<float>() > 0f && crowController.IsGrounded(crowController.groundedRayCastLength))
             {
                 Jump();
             }
@@ -60,7 +60,7 @@ namespace StatePattern
             Flip();
             
             //fly when space is pressed in the air
-            if (crowController.jumpAction.triggered && crowController.jumpAction.ReadValue<float>() > 0f && !crowController.IsGrounded())
+            if (crowController.jumpAction.triggered && crowController.jumpAction.ReadValue<float>() > 0f && !crowController.IsGrounded(crowController.groundedRayCastLength))
             {
                 crowController.FlyStateEnter();
             }
@@ -80,7 +80,15 @@ namespace StatePattern
             {
                 animator.SetBool("isWalking", false);
             }
+
             posLastFrame = transform.position;
+
+
+            if (crowController.stamina < crowController.maxStamina)
+            {
+                crowController.stamina += crowController.staminaDrain;
+                crowController.updateStaminaBar();
+            }
         }
 
         public void Jump()
