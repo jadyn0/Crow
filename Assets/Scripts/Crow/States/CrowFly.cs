@@ -26,6 +26,9 @@ namespace StatePattern
 
         private bool isFacingRight;
 
+        public bool isAccelerating, isBraking;
+
+
         public CrowFly(Transform _transform, Rigidbody2D _rb, Animator _animator, float _glideSpeed, float _crawlFlySpeed, float _maxGlideSpeed, float _minGlideSpeed, float _glideDamp, float _rotationDamp, float _collisionMultiplier, float _gravityScale)
         {
             transform = _transform;
@@ -79,11 +82,18 @@ namespace StatePattern
 
             if (crowController.IsGrounded(crowController.hoverRayCastLength))
             {
-                animator.SetBool("isHovering", true);
+                if (dx < 0.85f * maxGlideSpeed && !isAccelerating) 
+                {
+                    animator.SetBool("isHovering", true);
+                }
             }
             else
             {
-                animator.SetBool("isHovering", false);
+                if (!isBraking)
+                {
+                    animator.SetBool("isHovering", false);
+                }
+                
             }
 
             Flip();
@@ -105,13 +115,20 @@ namespace StatePattern
 
             dx = Mathf.Clamp(dx, minGlideSpeed, maxGlideSpeed);
 
-            if(dx >= 0.95f * maxGlideSpeed && !animator.GetBool("isAccelerating"))
+            if(dx >= 0.85f * maxGlideSpeed && !isAccelerating)
             {
                 crowController.SetTrail(true);
+                animator.SetBool("flapWings", false);
             }
             else
             {
                 crowController.SetTrail(false);
+                animator.SetBool("flapWings", true);
+            }
+
+            if (rb.linearVelocityY > 0)
+            {
+                animator.SetBool("flapWings", true);
             }
 
                 rb.AddRelativeForceX(dx);
@@ -121,15 +138,21 @@ namespace StatePattern
         {
             if (crowController.jumpValue != 0)
             {
-                animator.SetBool("isBraking", true);
-                animator.SetBool("isAccelerating", false);
+                animator.SetBool("isHovering", true);
+                //animator.SetBool("isBraking", true);
+                //animator.SetBool("isAccelerating", false);
+                isBraking = true;
+                isAccelerating = false;
                 dx = Mathf.Lerp(dx, crawlFlySpeed, glideDamp);
             }
 
         else if (crowController.sprintValue != 0 && crowController.stamina > 0)
             {
-                animator.SetBool("isBraking", false);
-                animator.SetBool("isAccelerating", true);
+                animator.SetBool("isHovering", false);
+                //animator.SetBool("isBraking", false);
+                //animator.SetBool("isAccelerating", true);
+                isBraking = false;
+                isAccelerating = true;
                 dx = Mathf.Lerp(dx, maxGlideSpeed, glideDamp);
 
                 crowController.stamina -= crowController.staminaDrain;
@@ -138,8 +161,11 @@ namespace StatePattern
 
             else
             {
-                animator.SetBool("isBraking", false);
-                animator.SetBool("isAccelerating", false);
+                animator.SetBool("isHovering", false);
+                //animator.SetBool("isBraking", false);
+                //animator.SetBool("isAccelerating", false);
+                isBraking = false;
+                isAccelerating = false;
             }
         }
 
@@ -157,12 +183,13 @@ namespace StatePattern
         private void Flip()
         {
             Vector3 localScale = transform.localScale;
-            if (transform.eulerAngles.z % 360 > 90 && transform.eulerAngles.z % 360 < 270 && !animator.GetBool("isHovering"))
+            //if (transform.eulerAngles.z % 360 > 90 && transform.eulerAngles.z % 360 < 270 && !animator.GetBool("isBraking"))
+            if (transform.eulerAngles.z % 360 > 90 && transform.eulerAngles.z % 360 < 270 && !isBraking)
             {
                 localScale.y = -1f;
                 isFacingRight = false;
             }
-            else if(transform.eulerAngles.z % 360 < 90 && transform.eulerAngles.z % 360 > 0 && !animator.GetBool("isHovering") || transform.eulerAngles.z % 360 > 270 && transform.eulerAngles.z % 360 < 360 && !animator.GetBool("isHovering"))
+            else if(transform.eulerAngles.z % 360 < 90 && transform.eulerAngles.z % 360 > 0 && !isBraking || transform.eulerAngles.z % 360 > 270 && transform.eulerAngles.z % 360 < 360 && !isBraking)
             {
                 localScale.y = 1f;
                 isFacingRight = true;
